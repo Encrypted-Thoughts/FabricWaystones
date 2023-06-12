@@ -1,7 +1,6 @@
 package wraith.fwaystones.util;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -33,7 +32,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
 
 public final class Utils {
@@ -161,6 +159,23 @@ public final class Utils {
             return true;
         }
         switch (cost) {
+            case CUSTOM -> {
+                if (takeCost && player.experienceLevel >= amount) {
+                    player.addExperienceLevels(-amount);
+                    return true;
+                }
+
+                var customHungerManager = player.getHungerManager();
+                var customHungerAndExhaustion = customHungerManager.getFoodLevel() + customHungerManager.getSaturationLevel();
+                if (customHungerAndExhaustion <= 5 || customHungerAndExhaustion + customHungerManager.getExhaustion() / 8F <= amount) {
+                    player.sendMessage(Text.translatable("fwaystones.no_teleport.hunger"), true);
+                    return false;
+                }
+                if (takeCost) {
+                    customHungerManager.addExhaustion(8 * amount);
+                }
+                return true;
+            }
             case HEALTH -> {
                 if (player.getHealth() + player.getAbsorptionAmount() <= amount) {
                     player.sendMessage(Text.translatable("fwaystones.no_teleport.health"), true);
