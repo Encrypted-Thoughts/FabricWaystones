@@ -21,9 +21,6 @@
     ],
     "client": [
       "wraith.fwaystones.client.WaystonesClient"
-    ],
-    "journeymap": [
-      "wraith.fwaystones.integration.journeymap.JourneymapPlugin"
     ]
   },
   "mixins": [
@@ -33,7 +30,7 @@
   "depends": {
     "fabricloader": ">=0.14.21",
     "fabric": "*",
-    "minecraft": "~1.20",
+    "minecraft": ">=1.20",
     "java": ">=17",
     "owo": ">=0.10.3"
   }
